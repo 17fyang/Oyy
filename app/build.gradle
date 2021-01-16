@@ -34,4 +34,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
 
+    implementation 'com.alibaba:fastjson:1.1.54.android'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    compile group: 'commons-codec', name: 'commons-codec', version: '1.10'
+
 }
