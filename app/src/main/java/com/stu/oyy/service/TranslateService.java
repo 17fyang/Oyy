@@ -87,7 +87,7 @@ public class TranslateService {
             return getResult(taskId);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return new String[]{""};
         }
     }
 
