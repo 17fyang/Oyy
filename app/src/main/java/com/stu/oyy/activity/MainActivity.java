@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Message;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -16,8 +17,12 @@ import com.stu.oyy.record.WaveFile;
 import com.stu.oyy.service.TranslateService;
 import com.stu.oyy.util.Async;
 import com.stu.oyy.util.MessageUtil;
+import com.stu.oyy.util.StringUtil;
 import com.stu.oyy.web.GeneralHandle;
 import com.stu.oyy.web.MessageKey;
+
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,16 +37,24 @@ public class MainActivity extends AppCompatActivity {
     private TextView mainTextView;
     private TextView buttonStatusTextView;
     private Button button;
+    private Map<String, EditText> prefixMap = new HashMap<>();
 
     {
         //注册修改主textview翻译结果的handle
         GeneralHandle.getInstance().registerHandle(MessageKey.SET_TRANSLATE_TEXT, (context, msg) -> {
             String[] result = (String[]) msg.obj;
-
             StringBuilder sb = new StringBuilder();
-            for (String s : result) sb.append(s).append("\r\n");
+            for (String s : result) sb.append(s);
+            String text = StringUtil.trimChinese(sb.toString());
 
-            mainTextView.setText(sb.toString());
+            for (Map.Entry<String, EditText> entry : prefixMap.entrySet()) {
+                if (text.startsWith(entry.getKey())) {
+                    String inputText = text.substring(text.indexOf(entry.getKey()) + entry.getKey().length());
+                    entry.getValue().setText(inputText);
+                }
+            }
+
+            mainTextView.setText(text);
         });
     }
 
@@ -56,6 +69,19 @@ public class MainActivity extends AppCompatActivity {
         initButton();
         verifyPermissions(this);
 
+        EditText accountInput = findViewById(R.id.acountInput);
+        EditText passwordInput = findViewById(R.id.passwordInput);
+        EditText userNameInput = findViewById(R.id.userNameInput);
+        EditText verifyInput = findViewById(R.id.verifyInput);
+
+        prefixMap.put("输入账号", accountInput);
+        prefixMap.put("输入密码", passwordInput);
+        prefixMap.put("输入用户名", userNameInput);
+        prefixMap.put("输入验证码", verifyInput);
+
+
+        System.out.println(StringUtil.trimChinese("输入账号：12465，input.。"));
+        accountInput.setText("");
     }
 
 
@@ -64,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressLint("ClickableViewAccessibility")
     private void initButton() {
-        button = findViewById(R.id.button);
+        button = findViewById(R.id.statrtButton);
         button.setOnTouchListener((view, event) -> {
             if (event.getAction() == 0) {
                 buttonStatusTextView.setText("录音状态：录音中");
