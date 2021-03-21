@@ -13,7 +13,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginHorizontal="50dp"
-            android:layout_marginVertical="80dp">
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp">
 
         <TextView
                 android:text="账号："
@@ -110,7 +111,7 @@
                 android:id="@+id/statrtButton"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="163dp"
+                android:layout_marginTop="120dp"
                 android:visibility="visible"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="78dp"
