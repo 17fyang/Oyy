@@ -26,9 +26,12 @@ import java.util.Map;
 
 
 public class MainActivity extends AppCompatActivity {
+    public static final String SEX_PREFIX = "输入性别";
+    public static final String PROVINCE_PREFIX = "输入省份";
+
     //申请权限
     private static final int GET_RECODE_AUDIO = 1;
-    private static String[] PERMISSION_ALL = {
+    private static final String[] PERMISSION_ALL = {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE,
             Manifest.permission.READ_EXTERNAL_STORAGE,
@@ -36,8 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
     private TextView mainTextView;
     private TextView buttonStatusTextView;
-    private Button button;
-    private Map<String, EditText> prefixMap = new HashMap<>();
+    private SexRadioGroup sexRadioGroup;
+    private ProvinceSpinner provinceSpinner;
+    private final Map<String, EditText> prefixMap = new HashMap<>();
 
     {
         //注册修改主textview翻译结果的handle
@@ -47,11 +51,22 @@ public class MainActivity extends AppCompatActivity {
             for (String s : result) sb.append(s);
             String text = StringUtil.trimChinese(sb.toString());
 
+            //匹配到输入框的操作
             for (Map.Entry<String, EditText> entry : prefixMap.entrySet()) {
                 if (text.startsWith(entry.getKey())) {
                     String inputText = text.substring(text.indexOf(entry.getKey()) + entry.getKey().length());
                     entry.getValue().setText(inputText);
                 }
+            }
+
+            //匹配到输入性别的操作
+            if (text.startsWith(SEX_PREFIX)) {
+                sexRadioGroup.setInput(text.substring(SEX_PREFIX.length()));
+            }
+
+            //匹配到输入省份操作
+            if (text.startsWith(PROVINCE_PREFIX)) {
+                provinceSpinner.setInput(text.substring(PROVINCE_PREFIX.length()));
             }
 
             mainTextView.setText(text);
@@ -66,21 +81,23 @@ public class MainActivity extends AppCompatActivity {
         buttonStatusTextView = findViewById(R.id.textView2);
         mainTextView = findViewById(R.id.textView);
 
+        sexRadioGroup = findViewById(R.id.rg_1);
+        sexRadioGroup.setActivity(this);
+
+        provinceSpinner = findViewById(R.id.spinner);
+        provinceSpinner.init();
+
         initButton();
         verifyPermissions(this);
 
         EditText accountInput = findViewById(R.id.acountInput);
         EditText passwordInput = findViewById(R.id.passwordInput);
         EditText userNameInput = findViewById(R.id.userNameInput);
-        EditText verifyInput = findViewById(R.id.verifyInput);
 
         prefixMap.put("输入账号", accountInput);
         prefixMap.put("输入密码", passwordInput);
         prefixMap.put("输入用户名", userNameInput);
-        prefixMap.put("输入验证码", verifyInput);
 
-
-        System.out.println(StringUtil.trimChinese("输入账号：12465，input.。"));
         accountInput.setText("");
     }
 
@@ -90,7 +107,7 @@ public class MainActivity extends AppCompatActivity {
      */
     @SuppressLint("ClickableViewAccessibility")
     private void initButton() {
-        button = findViewById(R.id.statrtButton);
+        Button button = findViewById(R.id.statrtButton);
         button.setOnTouchListener((view, event) -> {
             if (event.getAction() == 0) {
                 buttonStatusTextView.setText("录音状态：录音中");

@@ -26,7 +26,7 @@ public class HttpUtil {
      * @param restResponse
      */
     public static void asyncPostRest(String url, RequestBody body, IRestResponse restResponse) {
-        OkHttpClient client = new OkHttpClient.Builder().readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS).build();
+        OkHttpClient client = buildClient();
         Request request = new Request.Builder().url(url).post(body).build();
         Call call = client.newCall(request);
         call.enqueue(new Callback() {
@@ -47,6 +47,30 @@ public class HttpUtil {
                 }
             }
         });
+    }
+
+    /**
+     * 同步发送Get请求
+     *
+     * @param url
+     * @return
+     */
+    public static Rest syncGet(String url) {
+        Request request = new Request.Builder().url(url).get().build();
+        OkHttpClient client = buildClient();
+        Response response = null;
+        try {
+            response = client.newCall(request).execute();
+            if (response.isSuccessful()) {
+                Rest rest = JSON.parseObject(response.body().string(), Rest.class);
+                return rest;
+            } else {
+                return null;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     /**
@@ -74,7 +98,7 @@ public class HttpUtil {
      * @return
      */
     public static Rest syncPost(Request request) {
-        OkHttpClient client = new OkHttpClient.Builder().readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS).build();
+        OkHttpClient client = buildClient();
         Call call = client.newCall(request);
         try {
             String text = call.execute().body().string();
@@ -85,6 +109,11 @@ public class HttpUtil {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private static OkHttpClient buildClient() {
+        return new OkHttpClient.Builder()
+                .readTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS).build();
     }
 }
 

@@ -10,4 +10,6 @@ public class MessageKey {
     public static final int SWITCH_ACTIVITY = 0x10;
     public static final int GET_NET_IMAGE = 0x2;
     public static final int SET_TRANSLATE_TEXT = 0x3;
+    public static final int IDENTIFY_SEX = 0x4;
+    public static final int IDENTIFY_PROVINCE = 0x5;
 }
