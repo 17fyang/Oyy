@@ -26,8 +26,8 @@ import java.util.Iterator;
 public class TranslateService {
 
     //讯飞云id
-    public static final String APPID = "6056fe82";
-    public static final String SECRET_KEY = "4a6ca083d73d5ed4756ae9490ad45aa8";
+    public static final String APPID = "f3271b91";
+    public static final String SECRET_KEY = "df346cf17f150a71b665e5bff437d1b8";
 
     //讯飞云api
     public static final String BASE_API = "http://raasr.xfyun.cn/api";

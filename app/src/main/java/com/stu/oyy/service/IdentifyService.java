@@ -30,6 +30,7 @@ public class IdentifyService {
     public boolean identifySex(String word) {
         String url = String.format(IDENTIFY_SEX, word);
         Rest result = HttpUtil.syncGet(url);
+        if (result == null) return false;
         return result.getData().equals("1");
     }
 
@@ -42,6 +43,7 @@ public class IdentifyService {
     public int identifyProvince(String word) {
         String url = String.format(IDENTIFY_PROVINCE, word);
         Rest result = HttpUtil.syncGet(url);
+        if (result == null) return 0;
         return Integer.parseInt(result.getData());
     }
 
